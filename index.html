@@ -127,10 +127,12 @@ h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4.2rem);line-height:.98;
 /* Cell */
 .cell-area{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
 .blood{height:300px;background:#e8e2d8;position:relative;overflow:hidden;border:1px solid var(--line);display:grid;place-items:center}
-.cell{width:132px;height:78px;border-radius:50%;background:#bd5149;box-shadow:inset 0 0 0 17px #d8786d,0 10px 20px rgba(90,30,25,.15);transition:width .7s,height .7s,border-radius .7s,transform .7s,box-shadow .7s}
-.cell.sickle{width:150px;height:76px;border-radius:65% 22% 65% 22% / 48% 58% 42% 52%;transform:rotate(-24deg) skewX(-8deg);box-shadow:inset 0 0 0 16px #d8786d,0 10px 22px rgba(90,30,25,.18)}
-.cell:after{content:"";position:absolute;width:100%;height:100%;background:repeating-linear-gradient(12deg,transparent 0 12px,rgba(116,42,39,.18) 13px 15px);opacity:0;border-radius:inherit;transition:opacity .5s}
-.cell.sickle:after{opacity:1}
+.cell-wrap{position:relative;width:190px;height:150px}
+.cell-shape{position:absolute;inset:0;margin:auto;width:100%;height:100%;overflow:visible;transition:opacity .6s ease,transform .6s ease;filter:drop-shadow(0 10px 16px rgba(90,30,25,.2))}
+.cell-normal{opacity:1;transform:scale(1) rotate(0deg)}
+.cell-sickle{opacity:0;transform:scale(.92) rotate(6deg)}
+.cell-wrap.sickle .cell-normal{opacity:0;transform:scale(.88) rotate(-6deg)}
+.cell-wrap.sickle .cell-sickle{opacity:1;transform:scale(1) rotate(0deg)}
 
 /* Slider */
 .range-wrap{margin-top:22px}
@@ -331,7 +333,32 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <input id="oxygen" type="range" min="0" max="100" value="80" oninput="oxygenChange(this.value)">
 <div class="range-labels"><span>rendah</span><span>tinggi</span></div>
 <p id="oxygenText" class="small">Oksigen relatif tinggi · sel masih tampak normal dalam simulasi.</p></div></div>
-<div class="blood"><div class="cell" id="cell"></div></div>
+<div class="blood"><div class="cell-wrap" id="cellWrap">
+<svg class="cell-shape cell-normal" viewBox="0 0 200 140" aria-label="Sel darah merah normal berbentuk bikonkaf">
+<defs>
+<radialGradient id="rbcGrad" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#d8786d"/>
+<stop offset="58%" stop-color="#d8786d"/>
+<stop offset="66%" stop-color="#bd5149"/>
+<stop offset="100%" stop-color="#bd5149"/>
+</radialGradient>
+</defs>
+<circle cx="100" cy="70" r="64" fill="url(#rbcGrad)"/>
+</svg>
+<svg class="cell-shape cell-sickle" viewBox="0 0 200 140" aria-label="Sel darah merah berbentuk sabit pada kondisi oksigen rendah">
+<defs>
+<mask id="sickleMask">
+<ellipse cx="100" cy="70" rx="92" ry="26" fill="#fff" transform="rotate(-16 100 70)"/>
+<ellipse cx="126" cy="61" rx="85" ry="19" fill="#000" transform="rotate(-16 100 70)"/>
+</mask>
+<linearGradient id="sickleGrad" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#c8665a"/>
+<stop offset="100%" stop-color="#8f342c"/>
+</linearGradient>
+</defs>
+<ellipse cx="100" cy="70" rx="92" ry="26" fill="url(#sickleGrad)" mask="url(#sickleMask)" transform="rotate(-16 100 70)"/>
+</svg>
+</div></div>
 </div>
 </div></section>
 
@@ -424,13 +451,13 @@ function renderMutation(){
 function toggleMutation(){mutated=!mutated;renderMutation()}
 renderMutation();
 
-/* Sickle-cell visualization */
+/* Sickle-cell visualization: crossfade between two SVG shapes (normal disc vs. crescent) */
 function oxygenChange(v){
- const cell=document.getElementById('cell'), text=document.getElementById('oxygenText');
+ const wrap=document.getElementById('cellWrap'), text=document.getElementById('oxygenText');
  const low=Number(v)<38;
- cell.classList.toggle('sickle',low);
+ wrap.classList.toggle('sickle',low);
  text.textContent=low
-  ?'Oksigen relatif rendah · simulasi memperlihatkan sel menjadi lebih kaku dan memanjang.'
+  ?'Oksigen relatif rendah · simulasi memperlihatkan sel berubah menjadi bentuk sabit yang kaku dan memanjang.'
   :'Oksigen relatif tinggi · sel tetap berbentuk bikonkaf dalam simulasi.';
 }
 
