@@ -104,19 +104,13 @@ h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4.2rem);line-height:.98;
 .action[aria-pressed=true]{background:var(--red);border-color:var(--red)}
 
 /* Replication visual */
-.replication-stage{position:relative;height:250px;border:1px solid #444;background:#202020;overflow:hidden}
-.rep-strand{position:absolute;left:10%;right:10%;top:50%;height:2px;background:#aaa;transform-origin:center;transition:.8s}
-.rep-strand:before,.rep-strand:after{content:"";position:absolute;left:0;right:0;height:2px;background:#aaa}
-.rep-strand:before{top:-55px;transform:skewY(12deg)}
-.rep-strand:after{top:55px;transform:skewY(-12deg)}
-.rep-base{position:absolute;width:30px;height:30px;border-radius:50%;border:1px solid #777;background:#292929;top:50%;margin-top:-15px;transition:.7s}
-.rep-base:nth-child(1){left:15%}.rep-base:nth-child(2){left:27%}.rep-base:nth-child(3){left:39%}.rep-base:nth-child(4){left:51%}.rep-base:nth-child(5){left:63%}.rep-base:nth-child(6){left:75%}
-.replication-stage.active .rep-strand{transform:scaleX(.62)}
-.replication-stage.active .rep-strand:before{transform:skewY(28deg)}
-.replication-stage.active .rep-strand:after{transform:skewY(-28deg)}
-.replication-stage.active .rep-base:nth-child(odd){transform:translateY(-55px)}
-.replication-stage.active .rep-base:nth-child(even){transform:translateY(55px)}
-.rep-label{position:absolute;left:22px;bottom:18px;color:#aaa;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.replication-stage{position:relative;height:230px;border:1px solid #444;background:#202020;overflow:hidden}
+.replication-stage svg{width:100%;height:100%;display:block}
+.rep-closed,.rep-open{transition:opacity .5s ease}
+.rep-open{opacity:0}
+.replication-stage.active .rep-closed{opacity:0}
+.replication-stage.active .rep-open{opacity:1}
+.rep-label{position:absolute;left:22px;bottom:14px;color:#aaa;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
 
 /* Protein flow */
 .flow{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;gap:8px;align-items:center}
@@ -126,9 +120,9 @@ h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4.2rem);line-height:.98;
 
 /* Cell */
 .cell-area{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
-.blood{height:300px;background:#e8e2d8;position:relative;overflow:hidden;border:1px solid var(--line);display:grid;place-items:center}
-.cell-wrap{position:relative;width:190px;height:150px}
-.cell-shape{position:absolute;inset:0;margin:auto;width:100%;height:100%;overflow:visible;transition:opacity .6s ease,transform .6s ease;filter:drop-shadow(0 10px 16px rgba(90,30,25,.2))}
+.blood{height:300px;background:radial-gradient(ellipse at 50% 40%,#f0e6df 0%,#e3d6c9 55%,#d9c8b8 100%);position:relative;overflow:hidden;border:1px solid var(--line);display:grid;place-items:center}
+.cell-wrap{position:relative;width:230px;height:180px}
+.cell-shape{position:absolute;inset:0;margin:auto;width:100%;height:100%;overflow:visible;transition:opacity .6s ease,transform .6s ease;filter:drop-shadow(0 10px 16px rgba(90,30,25,.22))}
 .cell-normal{opacity:1;transform:scale(1) rotate(0deg)}
 .cell-sickle{opacity:0;transform:scale(.92) rotate(6deg)}
 .cell-wrap.sickle .cell-normal{opacity:0;transform:scale(.88) rotate(-6deg)}
@@ -287,10 +281,38 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <div class="interactive" style="margin-top:22px">
 <h3>Bayangkan proses penggandaan</h3><p>Tekan tombol untuk membuka visual sederhana dari DNA yang sedang disalin.</p>
 <div class="replication-stage" id="replication" aria-label="Simulasi pembukaan DNA">
-<div class="rep-strand"></div>
-<span class="rep-base"></span><span class="rep-base"></span><span class="rep-base"></span>
-<span class="rep-base"></span><span class="rep-base"></span><span class="rep-base"></span>
-<div class="rep-label">DNA beruntai ganda · arahkan kursor untuk melihat respons</div>
+<svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+<g class="rep-closed">
+  <line x1="30" y1="94" x2="370" y2="94" stroke="#8a8a8a" stroke-width="2.5"/>
+  <line x1="30" y1="106" x2="370" y2="106" stroke="#8a8a8a" stroke-width="2.5"/>
+  <g stroke="#666" stroke-width="2">
+    <line x1="80" y1="94" x2="80" y2="106"/>
+    <line x1="140" y1="94" x2="140" y2="106"/>
+    <line x1="200" y1="94" x2="200" y2="106"/>
+    <line x1="260" y1="94" x2="260" y2="106"/>
+    <line x1="320" y1="94" x2="320" y2="106"/>
+  </g>
+  <g fill="#2b2b2b" stroke="#888" stroke-width="1.5">
+    <circle cx="80" cy="94" r="7"/><circle cx="80" cy="106" r="7"/>
+    <circle cx="140" cy="94" r="7"/><circle cx="140" cy="106" r="7"/>
+    <circle cx="200" cy="94" r="7"/><circle cx="200" cy="106" r="7"/>
+    <circle cx="260" cy="94" r="7"/><circle cx="260" cy="106" r="7"/>
+    <circle cx="320" cy="94" r="7"/><circle cx="320" cy="106" r="7"/>
+  </g>
+</g>
+<g class="rep-open">
+  <path d="M30 100 L120 100" stroke="#8a8a8a" stroke-width="2.5" fill="none"/>
+  <path d="M120 100 L370 52" stroke="#a64038" stroke-width="2.5" fill="none"/>
+  <path d="M120 100 L370 148" stroke="#536b79" stroke-width="2.5" fill="none"/>
+  <g fill="#2b2b2b" stroke="#a64038" stroke-width="1.5">
+    <circle cx="172" cy="86" r="7"/><circle cx="228" cy="76" r="7"/><circle cx="285" cy="65" r="7"/><circle cx="342" cy="55" r="7"/>
+  </g>
+  <g fill="#2b2b2b" stroke="#536b79" stroke-width="1.5">
+    <circle cx="172" cy="114" r="7"/><circle cx="228" cy="124" r="7"/><circle cx="285" cy="135" r="7"/><circle cx="342" cy="145" r="7"/>
+  </g>
+</g>
+</svg>
+<div class="rep-label" id="repLabel">DNA beruntai ganda · klik untuk melihat pembukaan</div>
 </div>
 <button class="action" id="repBtn" onclick="replicate()" aria-pressed="false"><span class="dot"></span><span id="repBtnText">Buka untai DNA</span></button>
 </div>
@@ -336,27 +358,29 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <div class="blood"><div class="cell-wrap" id="cellWrap">
 <svg class="cell-shape cell-normal" viewBox="0 0 200 140" aria-label="Sel darah merah normal berbentuk bikonkaf">
 <defs>
-<radialGradient id="rbcGrad" cx="50%" cy="50%" r="50%">
-<stop offset="0%" stop-color="#d8786d"/>
-<stop offset="58%" stop-color="#d8786d"/>
-<stop offset="66%" stop-color="#bd5149"/>
-<stop offset="100%" stop-color="#bd5149"/>
+<radialGradient id="rbcGrad" cx="42%" cy="38%" r="65%">
+<stop offset="0%" stop-color="#e08d80"/>
+<stop offset="45%" stop-color="#d8786d"/>
+<stop offset="72%" stop-color="#c2645a"/>
+<stop offset="100%" stop-color="#a84a41"/>
+</radialGradient>
+<radialGradient id="rbcDimple" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#a8493f" stop-opacity=".55"/>
+<stop offset="70%" stop-color="#a8493f" stop-opacity="0"/>
 </radialGradient>
 </defs>
 <circle cx="100" cy="70" r="64" fill="url(#rbcGrad)"/>
+<ellipse cx="100" cy="70" rx="30" ry="22" fill="url(#rbcDimple)"/>
+<circle cx="100" cy="70" r="63" fill="none" stroke="#8f342c" stroke-width="1.5" opacity=".4"/>
 </svg>
 <svg class="cell-shape cell-sickle" viewBox="0 0 200 140" aria-label="Sel darah merah berbentuk sabit pada kondisi oksigen rendah">
 <defs>
-<mask id="sickleMask">
-<ellipse cx="100" cy="70" rx="92" ry="26" fill="#fff" transform="rotate(-16 100 70)"/>
-<ellipse cx="126" cy="61" rx="85" ry="19" fill="#000" transform="rotate(-16 100 70)"/>
-</mask>
 <linearGradient id="sickleGrad" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="#c8665a"/>
+<stop offset="0%" stop-color="#cf7266"/>
 <stop offset="100%" stop-color="#8f342c"/>
 </linearGradient>
 </defs>
-<ellipse cx="100" cy="70" rx="92" ry="26" fill="url(#sickleGrad)" mask="url(#sickleMask)" transform="rotate(-16 100 70)"/>
+<path d="M40 100 C55 55 90 30 140 26 C120 40 108 55 106 72 C104 90 112 106 128 118 C90 122 58 116 40 100 Z" fill="url(#sickleGrad)" stroke="#742a27" stroke-width="2"/>
 </svg>
 </div></div>
 </div>
@@ -421,11 +445,11 @@ dna.addEventListener('mouseenter',()=>{dna.setAttribute('title','DNA — arahkan
 
 /* Replication */
 function replicate(){
- const stage=document.getElementById('replication'),btn=document.getElementById('repBtn'),label=document.getElementById('repBtnText');
+ const stage=document.getElementById('replication'),btn=document.getElementById('repBtn'),label=document.getElementById('repBtnText'),repLabel=document.getElementById('repLabel');
  const active=stage.classList.toggle('active');
  btn.setAttribute('aria-pressed',active);
  label.textContent=active?'Pisahkan kembali untai DNA':'Buka untai DNA';
- stage.querySelector('.rep-label').textContent=active?'Untai DNA terbuka · masing-masing dapat menjadi cetakan':'DNA beruntai ganda · klik untuk melihat pembukaan';
+ repLabel.textContent=active?'Untai DNA terbuka · masing-masing dapat menjadi cetakan':'DNA beruntai ganda · klik untuk melihat pembukaan';
 }
 
 /* Mutation */
