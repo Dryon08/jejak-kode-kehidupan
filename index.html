@@ -111,6 +111,15 @@ h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4.2rem);line-height:.98;
 .replication-stage.active .rep-closed{opacity:0}
 .replication-stage.active .rep-open{opacity:1}
 .rep-label{position:absolute;left:22px;bottom:14px;color:#aaa;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+/* continuous "unzipping" fork animation, only runs while stage is active */
+.rep-fork{opacity:0}
+.replication-stage.active .rep-fork{opacity:1;animation:forkTravel 2.6s linear infinite}
+@keyframes forkTravel{
+ 0%{transform:translateX(0)}
+ 100%{transform:translateX(250px)}
+}
+.rep-fork-dot{animation:forkPulse 1.1s ease-in-out infinite}
+@keyframes forkPulse{0%,100%{r:6}50%{r:9}}
 
 /* Protein flow */
 .flow{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;gap:8px;align-items:center}
@@ -124,8 +133,8 @@ h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4.2rem);line-height:.98;
 .cell-wrap{position:relative;width:230px;height:180px}
 .cell-shape{position:absolute;inset:0;margin:auto;width:100%;height:100%;overflow:visible;transition:opacity .6s ease,transform .6s ease;filter:drop-shadow(0 10px 16px rgba(90,30,25,.22))}
 .cell-normal{opacity:1;transform:scale(1) rotate(0deg)}
-.cell-sickle{opacity:0;transform:scale(.92) rotate(6deg)}
-.cell-wrap.sickle .cell-normal{opacity:0;transform:scale(.88) rotate(-6deg)}
+.cell-sickle{opacity:0;transform:scale(.9) rotate(-8deg)}
+.cell-wrap.sickle .cell-normal{opacity:0;transform:scale(.88) rotate(6deg)}
 .cell-wrap.sickle .cell-sickle{opacity:1;transform:scale(1) rotate(0deg)}
 
 /* Slider */
@@ -155,7 +164,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
  .section-head{grid-template-columns:60px 1fr}.num{font-size:2.7rem}h1{font-size:3.8rem}
  .wrap{padding:0 20px}.dna-wrap{transform:scale(.9)}.dna-wrap:hover{transform:scale(.96)}
 }
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.rep-fork{animation:none!important}.rep-fork-dot{animation:none!important}}
 </style>
 </head>
 <body>
@@ -279,7 +288,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <div class="card reveal"><h3>3. Memeriksa</h3><p>Mekanisme perbaikan dapat mendeteksi dan memperbaiki sebagian kesalahan penggandaan.</p></div>
 </div>
 <div class="interactive" style="margin-top:22px">
-<h3>Bayangkan proses penggandaan</h3><p>Tekan tombol untuk membuka visual sederhana dari DNA yang sedang disalin.</p>
+<h3>Bayangkan proses penggandaan</h3><p>Tekan tombol untuk membuka visual sederhana dari DNA yang sedang disalin — begitu terbuka, garpu replikasi akan terus bergerak menyusuri untai.</p>
 <div class="replication-stage" id="replication" aria-label="Simulasi pembukaan DNA">
 <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
 <g class="rep-closed">
@@ -309,6 +318,12 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
   </g>
   <g fill="#2b2b2b" stroke="#536b79" stroke-width="1.5">
     <circle cx="172" cy="114" r="7"/><circle cx="228" cy="124" r="7"/><circle cx="285" cy="135" r="7"/><circle cx="342" cy="145" r="7"/>
+  </g>
+  <!-- continuously travelling replication fork: a small "Y" opening moving left to right, looping -->
+  <g class="rep-fork">
+    <circle class="rep-fork-dot" cx="120" cy="100" r="7" fill="#fbf9f4" stroke="#171716" stroke-width="2"/>
+    <line x1="120" y1="100" x2="96" y2="88" stroke="#fbf9f4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="120" y1="100" x2="96" y2="112" stroke="#fbf9f4" stroke-width="3" stroke-linecap="round"/>
   </g>
 </g>
 </svg>
@@ -376,11 +391,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <svg class="cell-shape cell-sickle" viewBox="0 0 200 140" aria-label="Sel darah merah berbentuk sabit pada kondisi oksigen rendah">
 <defs>
 <linearGradient id="sickleGrad" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="#cf7266"/>
-<stop offset="100%" stop-color="#8f342c"/>
+<stop offset="0%" stop-color="#d98275"/>
+<stop offset="55%" stop-color="#b0554a"/>
+<stop offset="100%" stop-color="#7c2f27"/>
 </linearGradient>
 </defs>
-<path d="M40 100 C55 55 90 30 140 26 C120 40 108 55 106 72 C104 90 112 106 128 118 C90 122 58 116 40 100 Z" fill="url(#sickleGrad)" stroke="#742a27" stroke-width="2"/>
+<path d="M136 18
+         C 96 18, 55 42, 42 82
+         C 34 106, 40 128, 58 122
+         C 50 108, 52 88, 66 70
+         C 82 50, 108 36, 138 32
+         C 155 30, 168 34, 176 44
+         C 170 30, 155 20, 136 18 Z"
+      fill="url(#sickleGrad)" stroke="#63241e" stroke-width="2" stroke-linejoin="round"/>
 </svg>
 </div></div>
 </div>
@@ -427,7 +450,7 @@ const io=new IntersectionObserver(entries=>{
 },{threshold:.12});
 reveals.forEach(x=>io.observe(x));
 
-/* Hover explanation tooltip */
+/* Hover explanation tooltip (custom, not the native browser title tooltip) */
 const tip=document.getElementById('tooltip');
 document.querySelectorAll('[data-tip]').forEach(el=>{
  el.addEventListener('mouseenter',e=>{
@@ -439,17 +462,13 @@ document.querySelectorAll('[data-tip]').forEach(el=>{
  el.addEventListener('mouseleave',()=>tip.style.opacity='0');
 });
 
-/* DNA hover can reveal a subtle informational label */
-const dna=document.querySelector('.dna-wrap');
-dna.addEventListener('mouseenter',()=>{dna.setAttribute('title','DNA — arahkan kursor untuk memperbesar dan menonjolkan pasangan basa')});
-
 /* Replication */
 function replicate(){
  const stage=document.getElementById('replication'),btn=document.getElementById('repBtn'),label=document.getElementById('repBtnText'),repLabel=document.getElementById('repLabel');
  const active=stage.classList.toggle('active');
  btn.setAttribute('aria-pressed',active);
  label.textContent=active?'Pisahkan kembali untai DNA':'Buka untai DNA';
- repLabel.textContent=active?'Untai DNA terbuka · masing-masing dapat menjadi cetakan':'DNA beruntai ganda · klik untuk melihat pembukaan';
+ repLabel.textContent=active?'Untai DNA terbuka · garpu replikasi bergerak menyusuri untai secara berkelanjutan':'DNA beruntai ganda · klik untuk melihat pembukaan';
 }
 
 /* Mutation */
