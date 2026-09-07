@@ -39,17 +39,27 @@ h1 em{color:var(--red);font-style:italic}
 .scrollline{width:42px;height:1px;background:var(--red)}
 
 .hero-art{min-height:520px;position:relative;display:grid;place-items:center;perspective:900px}
-.dna-wrap{position:relative;width:300px;height:460px;cursor:crosshair;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.dna-wrap:hover{transform:scale(1.07) rotateY(-4deg)}
-.dna-wrap:after{content:"A T G C";position:absolute;right:-18px;top:50%;font:700 .7rem ui-monospace,monospace;letter-spacing:.4em;color:var(--red);opacity:0;transform:translateX(10px);transition:.3s}
-.dna-wrap:hover:after{opacity:1;transform:translateX(0)}
+.dna-wrap{position:relative;width:260px;height:480px;cursor:pointer;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.dna-wrap:hover{transform:scale(1.045) rotateY(-3deg)}
 .helix-svg{width:100%;height:100%;overflow:visible}
-.dna-line{fill:none;stroke:var(--ink);stroke-width:3}
-.dna-rung{stroke:var(--red);stroke-width:2;transition:stroke-width .25s,opacity .25s}
-.dna-node{fill:var(--paper);stroke:var(--ink);stroke-width:2;transition:fill .25s,r .25s}
-.dna-wrap:hover .dna-rung{stroke-width:3}
-.dna-wrap:hover .dna-node{fill:#fff5f1}
-.stamp{position:absolute;right:0;bottom:4%;border:1px solid var(--red);color:var(--red);padding:10px 14px;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg);background:rgba(243,239,230,.72)}
+.dna-line-back{fill:none;stroke:var(--muted);stroke-width:5;stroke-linecap:round;opacity:.55;transition:opacity .3s}
+.dna-line-front{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round}
+.dna-rung{stroke-width:4;stroke-linecap:round;transition:stroke-width .2s,opacity .2s}
+.dna-rung.at{stroke:var(--red)}
+.dna-rung.gc{stroke:var(--blue)}
+.dna-base{cursor:help}
+.dna-base circle{fill:var(--paper);stroke-width:2;transition:fill .2s,r .2s}
+.dna-base.at circle{stroke:var(--red)}
+.dna-base.gc circle{stroke:var(--blue)}
+.dna-base text{font:800 11px ui-monospace,monospace;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.dna-base.at text{fill:var(--red)}
+.dna-base.gc text{fill:var(--blue)}
+.dna-base:hover circle{r:12;fill:#fff}
+.dna-wrap:hover .dna-line-back{opacity:.8}
+.dna-wrap:hover .dna-rung{stroke-width:5}
+.stamp{position:absolute;right:-6px;bottom:0;border:1px solid var(--red);color:var(--red);padding:10px 14px;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg);background:rgba(243,239,230,.72)}
+.stamp2{position:absolute;left:-4px;top:6%;font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.stamp2 .sw{width:9px;height:9px;border-radius:50%}
 
 /* Sections */
 section{padding:115px 0;border-top:1px solid var(--line)}
@@ -164,26 +174,87 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 <p class="lead">Bagaimana perubahan kecil pada DNA dapat mengubah protein, bentuk sel darah merah, dan akhirnya memengaruhi tubuh manusia?</p>
 <div class="meta">Eksplorasi interaktif tentang <b>anemia sel sabit</b> melalui lima pilar genetika molekuler.</div>
 </div>
-<div class="hero-art"><div class="dna-wrap" aria-label="Ilustrasi DNA interaktif">
-<svg class="helix-svg" viewBox="0 0 300 460" role="img">
-<path class="dna-line" d="M85 18 C230 70 70 120 215 172 S70 274 215 326 S70 428 215 442"/>
-<path class="dna-line" d="M215 18 C70 70 230 120 85 172 S230 274 85 326 S230 428 85 442"/>
-<g class="dna-rung">
-<line x1="112" y1="38" x2="188" y2="38"/><line x1="96" y1="92" x2="204" y2="92"/>
-<line x1="93" y1="147" x2="207" y2="147"/><line x1="111" y1="202" x2="189" y2="202"/>
-<line x1="137" y1="257" x2="163" y2="257"/><line x1="111" y1="312" x2="189" y2="312"/>
-<line x1="93" y1="367" x2="207" y2="367"/><line x1="96" y1="422" x2="204" y2="422"/>
+<div class="hero-art"><div class="dna-wrap" aria-label="Ilustrasi DNA interaktif — arahkan kursor ke pasangan basa untuk detail">
+<svg class="helix-svg" viewBox="0 0 260 480" role="img">
+<path class="dna-line-back" d="M130.0 10.0 C124.5 11.9 106.8 17.7 97.2 21.5 C87.7 25.3 78.4 29.2 72.6 33.0 C66.7 36.8 62.8 40.7 62.1 44.5 C61.4 48.3 63.8 52.2 68.5 56.0 C73.1 59.8 81.2 63.7 90.0 67.5 C98.9 71.3 110.6 75.2 121.5 79.0 C132.3 82.8 144.9 86.7 155.0 90.5 C165.2 94.3 175.4 98.2 182.4 102.0 C189.4 105.8 194.7 109.7 196.8 113.5 C198.8 117.3 198.0 121.2 194.7 125.0 C191.3 128.8 184.5 132.7 176.5 136.5 C168.6 140.3 157.5 144.2 146.9 148.0 C136.3 151.8 123.7 155.7 113.1 159.5 C102.5 163.3 91.4 167.2 83.5 171.0 C75.5 174.8 68.7 178.7 65.3 182.5 C62.0 186.3 61.2 190.2 63.2 194.0 C65.3 197.8 70.6 201.7 77.6 205.5 C84.6 209.3 94.8 213.2 105.0 217.0 C115.1 220.8 127.7 224.7 138.5 228.5 C149.4 232.3 161.1 236.2 170.0 240.0 C178.8 243.8 186.9 247.7 191.5 251.5 C196.2 255.3 198.6 259.2 197.9 263.0 C197.2 266.8 193.3 270.7 187.4 274.5 C181.6 278.3 172.3 282.2 162.8 286.0 C153.2 289.8 140.9 293.7 130.0 297.5 C119.1 301.3 106.8 305.2 97.2 309.0 C87.7 312.8 78.4 316.7 72.6 320.5 C66.7 324.3 62.8 328.2 62.1 332.0 C61.4 335.8 63.8 339.7 68.5 343.5 C73.1 347.3 81.2 351.2 90.0 355.0 C98.9 358.8 110.6 362.7 121.5 366.5 C132.3 370.3 144.9 374.2 155.0 378.0 C165.2 381.8 175.4 385.7 182.4 389.5 C189.4 393.3 194.7 397.2 196.8 401.0 C198.8 404.8 198.0 408.7 194.7 412.5 C191.3 416.3 184.5 420.2 176.5 424.0 C168.6 427.8 157.5 431.7 146.9 435.5 C136.3 439.3 123.7 443.2 113.1 447.0 C102.5 450.8 91.4 454.7 83.5 458.5 C75.5 462.3 68.3 468.1 65.3 470.0"/>
+<path class="dna-line-front" d="M130.0 10.0 C135.5 11.9 153.2 17.7 162.8 21.5 C172.3 25.3 181.6 29.2 187.4 33.0 C193.3 36.8 197.2 40.7 197.9 44.5 C198.6 48.3 196.2 52.2 191.5 56.0 C186.9 59.8 178.8 63.7 170.0 67.5 C161.1 71.3 149.4 75.2 138.5 79.0 C127.7 82.8 115.1 86.7 105.0 90.5 C94.8 94.3 84.6 98.2 77.6 102.0 C70.6 105.8 65.3 109.7 63.2 113.5 C61.2 117.3 62.0 121.2 65.3 125.0 C68.7 128.8 75.5 132.7 83.5 136.5 C91.4 140.3 102.5 144.2 113.1 148.0 C123.7 151.8 136.3 155.7 146.9 159.5 C157.5 163.3 168.6 167.2 176.5 171.0 C184.5 174.8 191.3 178.7 194.7 182.5 C198.0 186.3 198.8 190.2 196.8 194.0 C194.7 197.8 189.4 201.7 182.4 205.5 C175.4 209.3 165.2 213.2 155.0 217.0 C144.9 220.8 132.3 224.7 121.5 228.5 C110.6 232.3 98.9 236.2 90.0 240.0 C81.2 243.8 73.1 247.7 68.5 251.5 C63.8 255.3 61.4 259.2 62.1 263.0 C62.8 266.8 66.7 270.7 72.6 274.5 C78.4 278.3 87.7 282.2 97.2 286.0 C106.8 289.8 119.1 293.7 130.0 297.5 C140.9 301.3 153.2 305.2 162.8 309.0 C172.3 312.8 181.6 316.7 187.4 320.5 C193.3 324.3 197.2 328.2 197.9 332.0 C198.6 335.8 196.2 339.7 191.5 343.5 C186.9 347.3 178.8 351.2 170.0 355.0 C161.1 358.8 149.4 362.7 138.5 366.5 C127.7 370.3 115.1 374.2 105.0 378.0 C94.8 381.8 84.6 385.7 77.6 389.5 C70.6 393.3 65.3 397.2 63.2 401.0 C61.2 404.8 62.0 408.7 65.3 412.5 C68.7 416.3 75.5 420.2 83.5 424.0 C91.4 427.8 102.5 431.7 113.1 435.5 C123.7 439.3 136.3 443.2 146.9 447.0 C157.5 450.8 168.6 454.7 176.5 458.5 C184.5 462.3 191.7 468.1 194.7 470.0"/>
+<g>
+<line class="dna-rung at" x1="174.7" y1="26.4" x2="85.3" y2="26.4"/>
+<line class="dna-rung at" x1="186.8" y1="59.3" x2="73.2" y2="59.3"/>
+<line class="dna-rung gc" x1="100.5" y1="92.1" x2="159.5" y2="92.1"/>
+<line class="dna-rung gc" x1="65.3" y1="125.0" x2="194.7" y2="125.0"/>
+<line class="dna-rung gc" x1="142.1" y1="157.9" x2="117.9" y2="157.9"/>
+<line class="dna-rung gc" x1="197.9" y1="190.7" x2="62.1" y2="190.7"/>
+<line class="dna-rung at" x1="136.1" y1="223.6" x2="123.9" y2="223.6"/>
+<line class="dna-rung at" x1="63.7" y1="256.4" x2="196.3" y2="256.4"/>
+<line class="dna-rung gc" x1="106.1" y1="289.3" x2="153.9" y2="289.3"/>
+<line class="dna-rung gc" x1="189.9" y1="322.1" x2="70.1" y2="322.1"/>
+<line class="dna-rung at" x1="170.0" y1="355.0" x2="90.0" y2="355.0"/>
+<line class="dna-rung at" x1="80.8" y1="387.9" x2="179.2" y2="387.9"/>
+<line class="dna-rung gc" x1="76.8" y1="420.7" x2="183.2" y2="420.7"/>
+<line class="dna-rung gc" x1="164.9" y1="453.6" x2="95.1" y2="453.6"/>
 </g>
 <g>
-<circle class="dna-node" cx="112" cy="38" r="7"/><circle class="dna-node" cx="188" cy="38" r="7"/>
-<circle class="dna-node" cx="96" cy="92" r="7"/><circle class="dna-node" cx="204" cy="92" r="7"/>
-<circle class="dna-node" cx="93" cy="147" r="7"/><circle class="dna-node" cx="207" cy="147" r="7"/>
-<circle class="dna-node" cx="111" cy="202" r="7"/><circle class="dna-node" cx="189" cy="202" r="7"/>
-<circle class="dna-node" cx="137" cy="257" r="7"/><circle class="dna-node" cx="163" cy="257" r="7"/>
-<circle class="dna-node" cx="111" cy="312" r="7"/><circle class="dna-node" cx="189" cy="312" r="7"/>
-<circle class="dna-node" cx="93" cy="367" r="7"/><circle class="dna-node" cx="207" cy="367" r="7"/>
-<circle class="dna-node" cx="96" cy="422" r="7"/><circle class="dna-node" cx="204" cy="422" r="7"/>
-</g></svg></div><div class="stamp">DNA → Protein → Sel</div></div>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T).">
+<circle cx="174.7" cy="26.4" r="9"/><text x="174.7" y="26.4">A</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="85.3" cy="26.4" r="9"/><text x="85.3" y="26.4">T</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="186.8" cy="59.3" r="9"/><text x="186.8" y="59.3">T</text></g>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T).">
+<circle cx="73.2" cy="59.3" r="9"/><text x="73.2" y="59.3">A</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="100.5" cy="92.1" r="9"/><text x="100.5" y="92.1">G</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="159.5" cy="92.1" r="9"/><text x="159.5" y="92.1">C</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="65.3" cy="125.0" r="9"/><text x="65.3" y="125.0">C</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="194.7" cy="125.0" r="9"/><text x="194.7" y="125.0">G</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="142.1" cy="157.9" r="9"/><text x="142.1" y="157.9">G</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="117.9" cy="157.9" r="9"/><text x="117.9" y="157.9">C</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="197.9" cy="190.7" r="9"/><text x="197.9" y="190.7">C</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="62.1" cy="190.7" r="9"/><text x="62.1" y="190.7">G</text></g>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T) — posisi seperti inilah yang berubah pada anemia sel sabit.">
+<circle cx="136.1" cy="223.6" r="9"/><text x="136.1" y="223.6">A</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="123.9" cy="223.6" r="9"/><text x="123.9" y="223.6">T</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="63.7" cy="256.4" r="9"/><text x="63.7" y="256.4">T</text></g>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T).">
+<circle cx="196.3" cy="256.4" r="9"/><text x="196.3" y="256.4">A</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="106.1" cy="289.3" r="9"/><text x="106.1" y="289.3">C</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="153.9" cy="289.3" r="9"/><text x="153.9" y="289.3">G</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="189.9" cy="322.1" r="9"/><text x="189.9" y="322.1">G</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="70.1" cy="322.1" r="9"/><text x="70.1" y="322.1">C</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="170.0" cy="355.0" r="9"/><text x="170.0" y="355.0">T</text></g>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T).">
+<circle cx="90.0" cy="355.0" r="9"/><text x="90.0" y="355.0">A</text></g>
+<g class="dna-base at" data-tip="Adenina berpasangan dengan Timin (A–T).">
+<circle cx="80.8" cy="387.9" r="9"/><text x="80.8" y="387.9">A</text></g>
+<g class="dna-base at" data-tip="Timin berpasangan dengan Adenina (T–A).">
+<circle cx="179.2" cy="387.9" r="9"/><text x="179.2" y="387.9">T</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="76.8" cy="420.7" r="9"/><text x="76.8" y="420.7">G</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="183.2" cy="420.7" r="9"/><text x="183.2" y="420.7">C</text></g>
+<g class="dna-base gc" data-tip="Sitosin berpasangan dengan Guanin (C–G).">
+<circle cx="164.9" cy="453.6" r="9"/><text x="164.9" y="453.6">C</text></g>
+<g class="dna-base gc" data-tip="Guanin berpasangan dengan Sitosin (G–C).">
+<circle cx="95.1" cy="453.6" r="9"/><text x="95.1" y="453.6">G</text></g>
+</g>
+</svg>
+<div class="stamp2"><span class="sw" style="background:var(--red)"></span>A–T<span class="sw" style="background:var(--blue)"></span>G–C</div>
+</div><div class="stamp">DNA → Protein → Sel</div></div>
 </header>
 
 <main>
